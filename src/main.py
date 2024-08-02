@@ -6,6 +6,8 @@ from aiogram.client.default import DefaultBotProperties
 from src.Bot.hand.handlers import router
 from src.Bot.hand.states.user_reg import router_reg
 from src.db.engine import create_db, drop_db, async_session
+from src.Bot.hand.states.new_pass_reg import router_pass
+
 
 import os
 from dotenv import load_dotenv
@@ -13,6 +15,7 @@ from dotenv import load_dotenv
 dp = Dispatcher()
 dp.include_router(router)
 dp.include_router(router_reg)
+dp.include_router(router_pass)
 
 async def on_startup(bot):
     run = False

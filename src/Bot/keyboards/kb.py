@@ -9,5 +9,5 @@ start_reg = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Начать р�
                                  resize_keyboard=True, one_time_keyboard=True, input_field_placeholder='Выберите пункт меню...')
 
 end_reg = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Всё правильно')],
-                                        [KeyboardButton(text=' ')]],
+                                        [KeyboardButton(text='Зарегестрироваться заново')]],
                                 resize_keyboard=True, one_time_keyboard=True, input_field_placeholder='Проверьте всё тщательно')
