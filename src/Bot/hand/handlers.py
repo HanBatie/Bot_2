@@ -1,6 +1,6 @@
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery
-from aiogram.filters import Command
+from aiogram.filters import Command, CommandStart
 import asyncio
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
@@ -28,6 +28,8 @@ async def main_menu(message: Message):
     await message.answer(f'Здесь представлены мои функции.\n'
                          f'Выберите необходимую функцию:',
                          reply_markup=inl.main_menu)
+
+
 
 
 

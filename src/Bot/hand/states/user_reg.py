@@ -16,7 +16,18 @@ class user_reg(StatesGroup):
 
 router_reg = Router()
 
+@router_reg.message(CommandStart())
+async def start(message: Message, state: FSMContext):
+    await message.answer('Здравствуйте, введите ключ подключения:')
+    await  state.set_state(user_reg.R_C_id)
 
+@router_reg.message(user_reg.R_C_id)
+async def get_R_C_id(message: Message, state: FSMContext):
+    db_R_C = await rq.get_R_C(message.text)
+    await state.update_data(R_C_id = db_R_C[1])
+    await message.answer(f'Здравствуйте, вы перешли в бота {db_R_C[0]}.'
+                             f'\nДля последующего использования вам необходимо зарегестрироваться',
+                             reply_markup=kb.start_reg)
 
 @router_reg.message(CommandStart(deep_link=True))
 async def get_key(message: Message, command: CommandObject, state: FSMContext):
