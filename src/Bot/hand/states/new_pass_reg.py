@@ -10,12 +10,14 @@ router_pass = Router()
 
 
 class kpp_pass_reg(StatesGroup):
+    tg_id = State()
     auto_number = State()
     date_time = State()
     full_name = State()
 
 
 class build_pass_reg(StatesGroup):
+    tg_id = State()
     date_time = State()
     annotation = State()
     full_name = State()
@@ -89,5 +91,9 @@ async def get_build_full_name(message: Message, state: FSMContext):
 
 @router_pass.message(build_pass_reg.full_name)
 async def end_build_reg(message: Message, state: FSMContext):
+    await state.update_data(tg_id = message.from_user.id)
     await state.update_data(full_name=message.text)
+    data = await state.get_data()
+    await rq.db_add_kpp_pass(data['tg_id'], data['auto_number'], data['date_time'], data['full_name'])
     await message.answer("Заявка успешно создана")
+    await state.clear()

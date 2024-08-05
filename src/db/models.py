@@ -26,10 +26,19 @@ class Residental_Complex(Base):
 
 
 class Building(Base):
-    __tablename__ = 'building'
+    __tablename__ = 'buildings'
 
     id: Mapped[int] = mapped_column(primary_key=True)
     adress: Mapped[int] = mapped_column()
     R_C: Mapped[int] = mapped_column(ForeignKey('Residental_Complexes.id'))
 
+
+class kpp_pass(Base):
+    __tablename__ = 'kpp_passes'
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    tg_id = mapped_column(BigInteger)
+    auto_number: Mapped[str]  = mapped_column(String(10))
+    date_time: Mapped[str] = mapped_column()
+    full_name: Mapped[str] = mapped_column()
 

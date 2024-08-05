@@ -1,6 +1,6 @@
 import asyncio
 
-from src.db.models import User, Residental_Complex, Building
+from src.db.models import User, Residental_Complex, Building, kpp_pass
 from src.db.engine import async_session
 from sqlalchemy import select, update, delete, Column, func, cast
 
@@ -9,7 +9,7 @@ async def db_add_user(tg_id, phone_number, name, Building_adress, R_C_id):
     async with async_session() as session:
         result = await session.scalar(select(User).where(User.tg_id == tg_id))
         if not result:
-            session.add(User(tg_id=tg_id, ph_number=str(phone_number), name=name, adress=Building_adress), R_C_id=R_C_id)
+            session.add(User(tg_id=tg_id, ph_number=str(phone_number), name=name, adress=Building_adress, R_C_id=R_C_id))
         else:
             await session.execute(update(User).values( ph_number=str(phone_number), name=name, adress=Building_adress).filter_by(tg_id=tg_id))
         await session.commit()
@@ -26,3 +26,9 @@ async def get_R_C(key):
             return ['Ошибка: ключ подключения не распознан', 'Oshbka']
         else:
             return [str(result),int(resultt)]
+
+
+async def db_add_kpp_pass(tg_id, auto_number, data_time, full_name):
+    async with async_session() as session:
+        session.add(kpp_pass(tg_id=tg_id, auto_number=auto_number, data_time=data_time, full_name=full_name))
+        await session.commit()
