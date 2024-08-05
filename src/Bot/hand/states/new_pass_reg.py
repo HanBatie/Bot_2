@@ -32,18 +32,19 @@ async def main_menu(message: Message):
 @router_pass.callback_query(F.data == 'bid')
 async def main_request_bid(callback: CallbackQuery):
     await callback.answer('Вы нажали "Оставить заявку"')
-    await callback.message.answer("Выберите категорию заявки", reply_markup=inl.menu_bid)
+    await callback.message.edit_text("Выберите категорию заявки", reply_markup=inl.menu_bid)
 
 
 @router_pass.callback_query(F.data == 'kpp/build')
 async def new_pas(callback: CallbackQuery):
-    await callback.answer()
-    await callback.message.edit_text('dsa')
+    await callback.answer('Вы нажали "Пропуск КПП/Здание"')
+    await callback.message.edit_text('Выберите тип', reply_markup=inl.bid_pass)
 
 
 @router_pass.callback_query(F.data == 'kpp')
 async def get_auto_number(callback: CallbackQuery, state: FSMContext):
     await state.set_state(kpp_pass_reg.auto_number)
+    await state.update_data(tg_id = callback.from_user.id)
     await callback.answer('Вы нажали "КПП(Заявка на ТС)"')
     await callback.message.answer('Введите номер ТС. Пример: С123ВА77')
 
@@ -57,7 +58,7 @@ async def get_kpp_date_time(message: Message, state: FSMContext):
 
 @router_pass.message(kpp_pass_reg.date_time)
 async def get_kpp_full_name(message: Message, state: FSMContext):
-    await state.update_data(data_time=message.text)
+    await state.update_data(date_time=message.text)
     await state.set_state(kpp_pass_reg.full_name)
     await message.answer('Для завершения регистрации введите Ваше ФИО:')
 
@@ -65,6 +66,8 @@ async def get_kpp_full_name(message: Message, state: FSMContext):
 @router_pass.message(kpp_pass_reg.full_name)
 async def end_kpp_reg(message: Message, state: FSMContext):
     await state.update_data(full_name=message.text)
+    data = await state.get_data()
+    await rq.db_add_kpp_pass(data['tg_id'], data['auto_number'], data['date_time'], data['full_name'])
     await message.answer("Заявка успешно создана")
 
 
@@ -93,7 +96,5 @@ async def get_build_full_name(message: Message, state: FSMContext):
 async def end_build_reg(message: Message, state: FSMContext):
     await state.update_data(tg_id = message.from_user.id)
     await state.update_data(full_name=message.text)
-    data = await state.get_data()
-    await rq.db_add_kpp_pass(data['tg_id'], data['auto_number'], data['date_time'], data['full_name'])
     await message.answer("Заявка успешно создана")
     await state.clear()

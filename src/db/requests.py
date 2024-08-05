@@ -28,7 +28,7 @@ async def get_R_C(key):
             return [str(result),int(resultt)]
 
 
-async def db_add_kpp_pass(tg_id, auto_number, data_time, full_name):
+async def db_add_kpp_pass(tg_id, auto_number, date_time, full_name):
     async with async_session() as session:
-        session.add(kpp_pass(tg_id=tg_id, auto_number=auto_number, data_time=data_time, full_name=full_name))
+        session.add(kpp_pass(tg_id=tg_id, auto_number=auto_number, date_time=date_time, full_name=full_name))
         await session.commit()
